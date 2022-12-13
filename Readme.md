@@ -13,14 +13,14 @@ Can be run locally, or using the provided ansible playbook to run on a remote se
 Ensure dependencies are installed, excluding ansible.
 
 Start a RabbitMQ message broker in a container:
-`docker run -d --hostname my-rabbit --name some-rabbit -p 1883:1883 rabbitmq:3`
-`docker exec some-rabbit rabbitmq-plugins enable rabbitmq_mqtt`
-`docker exec some-rabbit rabbitmqctl start_app`
+- `docker run -d --hostname my-rabbit --name some-rabbit -p 1883:1883 rabbitmq:3`
+- `docker exec some-rabbit rabbitmq-plugins enable rabbitmq_mqtt`
+- `docker exec some-rabbit rabbitmqctl start_app`
 
 Now run the python files found in `st`. It is recommended to run as follows:
-`python3 st/printer.py`
-`python3 st/receiver.py`
-`python3 st/generator.py`
+- `python3 st/printer.py`
+- `python3 st/receiver.py`
+- `python3 st/generator.py`
 Note that these files can be run in any order if desired, and `receiver.py` and `generator.py` can be run in the background.
 
 ### Using Ansible Playbook
