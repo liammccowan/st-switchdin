@@ -1,0 +1,8 @@
+[server]
+st_aws_instance ansible_host=52.62.11.115 ansible_ssh_user=ubuntu
+[server:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/liam/switchdin/liam.pem
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,78 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Install paho-mqtt
+      pip:
+        name: paho-mqtt
+    
+    - name: Create directory
+      file:
+        path: /home/ubuntu/st
+        state: directory
+
+    - name: Copy files to remote directory
+      copy: 
+        src: ./st/
+        dest: /home/ubuntu/st
+ 
+    - name: Create mq container
+      community.docker.docker_container:
+        name: "some-rabbit"
+        image: "rabbitmq:3"
+        hostname: "my-rabbit"
+        exposed_ports:
+          - 1883
+        published_ports:
+          - "1883:1883"
+    
+    - name: Wait for 10 seconds
+      ansible.builtin.wait_for:
+        timeout: 10
+    
+    - name: Enable rabbitmq mqtt plugin
+      shell: sudo docker exec some-rabbit rabbitmq-plugins enable rabbitmq_mqtt
+
+    - name: Start the rabbitmq application
+      shell: sudo docker exec some-rabbit rabbitmqctl start_app
+    
+    - name: Start generator
+      shell: (nohup python3 st/generator.py) &
+    
+    - name: Start receiver
+      shell: (nohup python3 st/receiver.py) &
+      
