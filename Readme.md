@@ -42,7 +42,7 @@ This contains the random number generator. It publishes a random number between 
 This subscribes to the message from the generator, reads the number, and calculates 1 minute, 5 minute, and 30 minute averages. It uses the timestamp included in each message to keep track of if a particular value can be used in an average. Whenever a message is received, the averages are updated, and then published to another MQTT topic in the message broker.
 
 ### `printer.py`
-This subscribes to the averages calculated by the receiver, and prints them as it receives them. As it only prints the averages, and the reciever maintains and updates them, the printer can be stopped and started without affecting the averages.
+This subscribes to the averages calculated by the receiver, and prints them as it receives them. As it only prints averages, and the reciever maintains and updates them, the printer can be stopped and started without affecting the accuracy of the averages.
 
 ## Notes
 - This implementation uses pickle for serialization and deserialization of published payloads. Note that as pickle is python specific, it may be worth exploring alternatives if this system were to include components written in other languages.
